@@ -31,4 +31,4 @@ def get_isochrones(nzs=301,ages=[6.6,10.2,0.012],wait=0.):
     return 0
 
 if __name__ == '__main__':
-    get_isochrones(301)
+    get_isochrones(301,wait=5.)
