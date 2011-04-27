@@ -1,6 +1,47 @@
+import os, os.path
 import csv
 import gzip
 import numpy as nu
+_ZS= [0.002,0.004,0.006,0.008,0.01,0.012,0.014,0.016,0.018,0.02,0.022,
+      0.024,0.026,0.028,0.03]
+_DATADIR= os.getenv('ISODIST_DATA')
+if _DATADIR is None:
+    _DATADIR= '../data'
+class PadovaIsochrone:
+    """Class that represents a Padova isochrone"""
+    def __init__(self,type='2mass-spitzer-wise',Z=None):
+        """
+        NAME:
+           __init__
+        PURPOSE:
+           initialize
+        INPUT:
+           type= type of isochrones to load (e.g., 2mass-spitzer-wise)
+           Z= load only this metallicity (can be list)
+        OUTPUT:
+        HISTORY:
+           2011-04-27 - Written - Bovy (NYU)
+        """
+        #Set filters
+        if type.lower() == '2mass-spitzer-wise':
+            filters= ['J','H','Ks','[3.6]','[4.5]','[5.8]','[8.0]','[24]','[70]','[160]','W1','W2','W3','W4']
+        #Read the files
+        dicts= []
+        if Z is None:
+            ZS= _ZS
+        else:
+            if isinstance(Z,list):
+                ZS= Z
+            else:
+                ZS= [Z]
+        for Zm in ZS:
+            dicts.append(read_padova_isochrone(os.path.join(_DATADIR,
+                                                            type.lower(),
+                                                            type.lower()+'-Z-%5.3f.dat.gz' % Zm),
+                                               filters=filters))
+        self._dicts= dicts
+        return None
+
 def read_padova_isochrone(name,filters=None):
     """
     NAME:
