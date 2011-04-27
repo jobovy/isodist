@@ -1,4 +1,5 @@
 import csv
+import gzip
 import numpy as nu
 def read_padova_isochrone(name,filters=None):
     """
@@ -18,7 +19,11 @@ def read_padova_isochrone(name,filters=None):
     """
     dialect= csv.excel
     dialect.skipinitialspace=True
-    reader= csv.reader(open(name,'r'),delimiter='\t',
+    if name[-2:] == 'gz':
+        file= gzip.open(name,'r')
+    else:
+        file= open(name,'r')
+    reader= csv.reader(file,delimiter='\t',
                        dialect=dialect)
     nfilters= len(filters)
     ncols= nfilters+13
