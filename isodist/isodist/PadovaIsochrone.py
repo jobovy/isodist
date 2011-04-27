@@ -12,7 +12,7 @@ def read_padova_isochrone(name,filters=None):
     OUTPUT:
        dictionary with the table
     EXAMPLE:
-       read_padova_isochrone('../data/isoc_z0.dat',filters=['J','H','Ks'])
+       read_padova_isochrone('../data/output411373137337.dat',filters=['J','H','Ks','[3.6]','[4.5]','[5.8]','[8.0]','[24]','[70]','[160]','W1','W2','W3','W4'])
     HISTORY:
        2011-04-26 - Written - Bovy (NYU)
     """
@@ -29,7 +29,12 @@ def read_padova_isochrone(name,filters=None):
     logTe= []
     logg= []
     mbol= []
-    Flum= []
+    CO= []
+    M_hec= []
+    period= []
+    pmode= []
+    logMdot= []
+    int_IMF= []
     mags= []
     for row in reader:
         try:
@@ -48,7 +53,12 @@ def read_padova_isochrone(name,filters=None):
         for ii in range(nfilters):
             thismags.append(float(row[8+ii]))
         mags.append(thismags)
-        Flum.append(float(row[8+nfilters]))
+        CO.append(float(row[8+nfilters]))
+        M_hec.append(float(row[9+nfilters]))
+        period.append(float(row[10+nfilters]))
+        pmode.append(float(row[11+nfilters]))
+        logMdot.append(float(row[12+nfilters]))
+        int_IMF.append(float(row[13+nfilters]))
     #Load everything into a dictionary
     outDict= {}
     outDict['logage']= nu.array(logage)
@@ -58,7 +68,12 @@ def read_padova_isochrone(name,filters=None):
     outDict['logTe']= nu.array('logTe')
     outDict['logg']= nu.array(logg)
     outDict['mbol']= nu.array(mbol)
-    outDict['Flum']= nu.array(Flum)
+    outDict['CO']= nu.array(CO)
+    outDict['M_hec']= nu.array(M_hec)
+    outDict['period']= nu.array(period)
+    outDict['pmode']= nu.array(pmode)
+    outDict['logMdot']= nu.array(logMdot)
+    outDict['int_IMF']= nu.array(int_IMF)
     for ii in range(nfilters):
         thismag= []
         for jj in range(len(mags)):
