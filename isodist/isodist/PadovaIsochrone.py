@@ -47,6 +47,8 @@ class PadovaIsochrone (Isochrone):
         self._ZS= nu.array(ZS)
         self._dicts= dicts
         self._filters= filters
+        #Gather ages
+        self._logages= nu.array(sorted(list(set(self._dicts[0]['logage']))))
         return None
 
     def __call__(self,logage,Z=None,feh=None,afe=None,maxm=None):

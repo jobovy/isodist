@@ -30,3 +30,29 @@ class Isochrone:
            Written - Bovy (NYU)
         """
         raise NotImplementedError("'__call__' method for this isochrone is not implemented")
+
+    def Zs(self):
+        """
+        NAME:
+           Zs
+        PURPOSE:
+           Return the loaded metallicities
+        INPUT:
+        OUTPUT:
+        HISTORY:
+           2011-04-27 - Written - Bovy (NYU)
+        """
+        return self._ZS
+
+    def logages(self):
+        """
+        NAME:
+           logages
+        PURPOSE:
+           Return the loaded log_10 ages
+        INPUT:
+        OUTPUT:
+        HISTORY:
+           2011-04-27 - Written - Bovy (NYU)
+        """
+        return self._logages
