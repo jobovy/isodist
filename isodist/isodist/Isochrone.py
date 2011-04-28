@@ -56,3 +56,16 @@ class Isochrone:
            2011-04-27 - Written - Bovy (NYU)
         """
         return self._logages
+
+    def filters(self):
+        """
+        NAME:
+           filters
+        PURPOSE:
+           Return the supported filters
+        INPUT:
+        OUTPUT:
+        HISTORY:
+           2011-04-27 - Written - Bovy (NYU)
+        """
+        return self._filters
