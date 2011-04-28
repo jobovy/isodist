@@ -73,7 +73,7 @@ def eval_distpdf(ds,mdict=None,mivardict=None,logg=None,logg_ivar=None,
                     loglike[:,ii]= nu.finfo(nu.dtype(nu.float64)).min
                     continue #no use in continuing here
                 if not teff is None:
-                    loglike[:,ii]-= (teff-thisiso['Teff'][ii])**2.*teff_ivar
+                    loglike[:,ii]-= (teff-10**thisiso['logTe'][ii])**2.*teff_ivar
                 if not logg is None:
                     loglike[:,ii]-= (logg-thisiso['logg'][ii])**2.*logg_ivar
                 for key in mdict.keys():
