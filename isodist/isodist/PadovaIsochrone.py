@@ -5,13 +5,14 @@ import gzip
 import math
 import numpy as nu
 from galpy.util import bovy_plot
+from Isochrone import Isochrone
 _ZS= [0.002,0.004,0.006,0.008,0.01,0.012,0.014,0.016,0.018,0.02,0.022,
       0.024,0.026,0.028,0.03]
 _DATADIR= os.getenv('ISODIST_DATA')
 _ZSOLAR= 0.019
 if _DATADIR is None:
     _DATADIR= '../data'
-class PadovaIsochrone:
+class PadovaIsochrone (Isochrone):
     """Class that represents a Padova isochrone"""
     def __init__(self,type='2mass-spitzer-wise',Z=None):
         """
