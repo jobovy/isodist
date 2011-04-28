@@ -11,7 +11,8 @@ _ZS= [0.002,0.004,0.006,0.008,0.01,0.012,0.014,0.016,0.018,0.02,0.022,
 _DATADIR= os.getenv('ISODIST_DATA')
 _ZSOLAR= 0.019
 if _DATADIR is None:
-    _DATADIR= '../data'
+    _DATADIR= os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                           '../data')
 class PadovaIsochrone (Isochrone):
     """Class that represents a Padova isochrone"""
     def __init__(self,type='2mass-spitzer-wise',Z=None):
