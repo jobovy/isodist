@@ -1,3 +1,35 @@
+###############################################################################
+#   PadovaIsochrone: Module that represents isochrones calculated by the 
+#                    Padova group
+#
+#   Quick start guide
+#   -----------------
+#
+#   - Initialization: >>>p= PadovaIsochrone()
+#                     or
+#                     >>>p= PadovaIsochrone(Z=[0.02,0.03],
+#                                           type='2mass-spitzer-wise')
+#
+#   - Calling: >>>p(8.,Z=0.02)
+#              returns the whole isochrone as a dictionary
+#
+#   - Plotting: >>>p.plot(logage,Z=,feh=,d1=,d2=,maxm=,...)
+#               E.g.,
+#               >>>p.plot(8.,Z=0.02,d1='J-Ks',d2='H')
+#               plots the log_10 age= 8., Z=0.02 isochrone in the J-Ks,H plane
+#
+#   - Defining a new PadovaIsochrone: 1) In $ISODIST_DATA make a new folder 
+#                                        with the name you want (e.g., '2mass')
+#                                     2) put lists of isochrones of a certain Z
+#                                        and age (one file / Z) in this 
+#                                        directory; these files are named 
+#                                        __NAME__-Z-__Z__+.gz
+#                                        e.g.,
+#                                        2mass-Z-0.020.dat.gz
+#                                     3) Edit the __init__ of the 
+#                                        PadovaIsochrone to include this new 
+#                                        type (optional)
+###############################################################################
 import os, os.path
 import re
 import csv
@@ -15,7 +47,7 @@ if _DATADIR is None:
                            '../data')
 class PadovaIsochrone (Isochrone):
     """Class that represents a Padova isochrone"""
-    def __init__(self,type='2mass-spitzer-wise',Z=None):
+    def __init__(self,type='2mass-spitzer-wise',Z=None,filters=None):
         """
         NAME:
            __init__
@@ -24,6 +56,7 @@ class PadovaIsochrone (Isochrone):
         INPUT:
            type= type of isochrones to load (e.g., 2mass-spitzer-wise)
            Z= load only this metallicity (can be list)
+           filters= list of filters (optional)
         OUTPUT:
         HISTORY:
            2011-04-27 - Written - Bovy (NYU)
