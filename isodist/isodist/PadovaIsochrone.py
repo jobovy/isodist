@@ -100,6 +100,7 @@ class PadovaIsochrone (Isochrone):
            afe= not supported for Padova
            d1= x dimension (for color write 'J-Ks')
            d2= y dimension
+           maxm= maximum mass to plot
            +bovy_plot.bovy_plot keywords
         OUTPUT:
            plot to output device
