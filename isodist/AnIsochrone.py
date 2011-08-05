@@ -1,8 +1,10 @@
 import os, os.path
 import csv
+import math
 import numpy
 from Isochrone import Isochrone, FEH2Z, Z2FEH
 from PadovaIsochrone import _DATADIR
+_ANZSOLAR= 0.0176
 _ZS= [-0.1,-0.2,-0.3,-0.5,-1.,-1.5,-2.,-3.,0.,0.1,0.2,0.4]
 class AnIsochrone (Isochrone):
     """Class that represents a An+08 isochrone"""
@@ -41,7 +43,7 @@ class AnIsochrone (Isochrone):
                                                         signstr+'%03i_' % (int(numpy.fabs(100.*Zm)))
                                                         +corrstr+'.txt'),
                                            filters=self._filters))
-        self._ZS= numpy.array([FEH2Z(z) for z in ZS])
+        self._ZS= numpy.array([FEH2Z(z,zsolar=_ANZSOLAR) for z in ZS])
         self._dicts= dicts
         #Gather ages
         self._logages= numpy.array(sorted(list(set(self._dicts[0]['logage']))))
@@ -67,10 +69,10 @@ class AnIsochrone (Isochrone):
         if not afe is None:
             raise NotImplementedError("'afe=' not implemented for Padova isochrones")
         if not feh is None:
-            Z= math.exp(feh+math.log(_ZSOLAR))
+            Z= math.exp(feh+math.log(_ANZSOLAR))
         indx= (self._ZS == Z)
         ii= 0
-        while (not indx[ii]): ii+= 1
+        while (ii < len(self._dicts) and not indx[ii]): ii+= 1
         if ii == len(self._dicts):
             raise IOError("No isochrone found that matches this metallicity")
         thisDict= self._dicts[ii]

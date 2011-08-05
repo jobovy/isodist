@@ -35,7 +35,6 @@ import csv
 import gzip
 import math
 import numpy as nu
-from galpy.util import bovy_plot
 from Isochrone import Isochrone, FEH2Z, Z2FEH
 _ZS= [0.002,0.004,0.006,0.008,0.01,0.012,0.014,0.016,0.018,0.02,0.022,
       0.024,0.026,0.028,0.03]
