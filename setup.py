@@ -7,7 +7,7 @@ longDescription= ""
 
 setup(name='isodist',
       version='1.',
-      description='spectro-photometric distances to stars
+      description='spectro-photometric distances to stars',
       author='Jo Bovy',
       author_email='bovy@ias.edu',
       license='New BSD',
