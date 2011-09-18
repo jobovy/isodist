@@ -211,3 +211,12 @@ def Z2FEH(z,zsolar=_ZSOLAR):
     return numpy.log(z)-math.log(zsolar)
 def FEH2Z(feh,zsolar=_ZSOLAR):
     return numpy.exp(feh+math.log(zsolar))
+
+def dict2recarray(dict):
+    nEntries= len(dict.keys())
+    nOut= len(dict[dict.keys()[0]])
+    out= numpy.zeros(nOut,dtype={'names':dict.keys(),
+                                 'formats':[numpy.float64 for ii in range(nEntries)]})
+    for ii in range(nEntries):
+        out[dict.keys()[ii]]= dict[dict.keys()[ii]]
+    return out.view(numpy.recarray)
