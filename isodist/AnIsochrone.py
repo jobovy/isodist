@@ -2,7 +2,7 @@ import os, os.path
 import csv
 import math
 import numpy
-from Isochrone import Isochrone, FEH2Z, Z2FEH
+from Isochrone import Isochrone, FEH2Z, Z2FEH, dict2recarray
 from PadovaIsochrone import _DATADIR
 _ANZSOLAR= 0.0176
 _ZS= [-0.1,-0.2,-0.3,-0.5,-1.,-1.5,-2.,-3.,0.,0.1,0.2,0.4]
@@ -49,7 +49,8 @@ class AnIsochrone (Isochrone):
         self._logages= numpy.array(sorted(list(set(self._dicts[0]['logage']))))
         return None
         
-    def __call__(self,logage,Z=None,feh=None,afe=None,maxm=None):
+    def __call__(self,logage,Z=None,feh=None,afe=None,maxm=None,
+                 asrecarray=False):
         """
         NAME:
            __call__
@@ -61,6 +62,8 @@ class AnIsochrone (Isochrone):
            afe= None (not supported for An; linear relation between afe and 
                 feh is assumed)
            maxm= maximum mass to consider (m_ini)
+        KEYWORDS:
+           asrecarray= if True, return recarray, otherwise dict
         OUTPUT:
            isochrone
         HISTORY:
@@ -85,7 +88,10 @@ class AnIsochrone (Isochrone):
         outDict= {}
         for key in thisDict.keys():
             outDict[key]= thisDict[key][indx]
-        return outDict
+        if asrecarray:
+            return dict2recarray(outDict)
+        else:
+            return outDict
 
 def read_an_isochrone(name,filters=None):
     """
