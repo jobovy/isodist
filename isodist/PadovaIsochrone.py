@@ -35,7 +35,7 @@ import csv
 import gzip
 import math
 import numpy as nu
-from Isochrone import Isochrone, FEH2Z, Z2FEH
+from Isochrone import Isochrone, FEH2Z, Z2FEH, dict2recarray
 _ZS= [0.002,0.004,0.006,0.008,0.01,0.012,0.014,0.016,0.018,0.02,0.022,
       0.024,0.026,0.028,0.03]
 _DATADIR= os.getenv('ISODIST_DATA')
@@ -84,7 +84,8 @@ class PadovaIsochrone (Isochrone):
         self._logages= nu.array(sorted(list(set(self._dicts[0]['logage']))))
         return None
 
-    def __call__(self,logage,Z=None,feh=None,afe=None,maxm=None):
+    def __call__(self,logage,Z=None,feh=None,afe=None,maxm=None,
+                 asrecarray=False):
         """
         NAME:
            __call__
@@ -95,6 +96,8 @@ class PadovaIsochrone (Isochrone):
            Z= or feh= metallicity (use Z_\odot=0.019)
            afe= None (not supported for Padova)
            maxm= maximum mass to consider (m_ini)
+        KEYWORDS:
+           asrecarray= if True, return recarray
         OUTPUT:
            isochrone
         HISTORY:
@@ -117,7 +120,10 @@ class PadovaIsochrone (Isochrone):
         outDict= {}
         for key in thisDict.keys():
             outDict[key]= thisDict[key][indx]
-        return outDict
+        if asrecarray:
+            return dict2recarray(outDict)
+        else:
+            return outDict
 
 def read_padova_isochrone(name,filters=None):
     """
