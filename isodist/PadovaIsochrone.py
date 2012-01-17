@@ -68,15 +68,22 @@ class PadovaIsochrone (Isochrone):
         if Z is None:
             ZS= _ZS
         else:
-            if isinstance(Z,list):
+            if isinstance(Z,(list,nu.ndarray)):
                 ZS= Z
             else:
                 ZS= [Z]
         for Zm in ZS:
-            dicts.append(read_padova_isochrone(os.path.join(_DATADIR,
-                                                            type.lower(),
-                                                            type.lower()+'-Z-%5.3f.dat.gz' % Zm),
-                                               filters=filters))
+            try:
+                dicts.append(read_padova_isochrone(os.path.join(_DATADIR,
+                                                                type.lower(),
+                                                                type.lower()+'-Z-%5.3f.dat.gz' % Zm),
+                                                   filters=filters))
+            except IOError: #4?
+                dicts.append(read_padova_isochrone(os.path.join(_DATADIR,
+                                                                type.lower(),
+                                                                type.lower()+'-Z-%5.4f.dat.gz' % Zm),
+                                                   filters=filters))
+                
         self._ZS= nu.array(ZS)
         self._dicts= dicts
         self._filters= filters
@@ -209,3 +216,6 @@ def read_padova_isochrone(name,filters=None):
             thismag.append(mags[jj][ii])
         outDict[filters[ii]]= nu.array(thismag)
     return outDict
+
+def padovaTypes():
+    return ['2mass-spitzer-wise','sdss-ukidss']
