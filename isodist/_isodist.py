@@ -19,9 +19,9 @@ def eval_distpdf(ds,mdict=None,mivardict=None,logg=None,logg_ivar=None,
        mivardict= dictionary of magnitude inverse variances (matched to mdict)
        logg= observed logg
        logg_ivar= inverse variance of logg measurement
-       teff= observed T_eff
+       teff= observed T_eff [K]
        logg_ivar= inverse variance of T_eff measurement
-       logage= observed log_10 age
+       logage= observed log_10 age [Gyr]
        logage_ivar= inverse variance of log_10 age measurement
        Z= observed metallicity
        Z_ivar= inverse variance of Z measurement
