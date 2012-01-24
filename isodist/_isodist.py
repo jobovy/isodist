@@ -6,7 +6,8 @@ def eval_distpdf(ds,mdict=None,mivardict=None,logg=None,logg_ivar=None,
                  teff=None,teff_ivar=None,logage=None,logage_ivar=None,
                  Z=None,Z_ivar=None,feh=None,feh_ivar=None,
                  afe=None,afe_ivar=None,
-                 padova=None,padova_type=None):
+                 padova=None,padova_type=None,
+                 normalize=False):
     """
     NAME:
        eval_distpdf
@@ -31,6 +32,7 @@ def eval_distpdf(ds,mdict=None,mivardict=None,logg=None,logg_ivar=None,
        padova= if True, use Padova isochrones, 
                if set to a PadovaIsochrone objects, use this
        padova_type= type of PadovaIsochrone to use (e.g., 2mass-spitzer-wise)
+       normalize= if True, normalize output PDF (default: False)
     OUTPUT:
        log of probability
     HISTORY:
@@ -85,7 +87,7 @@ def eval_distpdf(ds,mdict=None,mivardict=None,logg=None,logg_ivar=None,
                 allout[jj,zz,aa]= logsumexp(loglike[jj,:])
             #add age constraint and prior
             if not logage is None:
-                allout[:,:,aa]+= -(logage-logages[aa])**2.*logage_ivar
+                allout[:,zz,aa]+= -(logage-logages[aa])**2.*logage_ivar
         #add Z constraint and prior
         if not Z is None:
             allout[:,zz,:]+= -(Z-ZS[zz])**2.*Z_ivar
@@ -93,6 +95,8 @@ def eval_distpdf(ds,mdict=None,mivardict=None,logg=None,logg_ivar=None,
     out= nu.zeros(len(_ds))
     for jj in range(len(_ds)):
         out[jj]= logsumexp(allout[jj,:,:])
+    if normalize:
+        out-= logsumexp(out)
     #return
     if scalarOut: return out[0]
     else: return out
