@@ -2,6 +2,7 @@ import numpy as nu
 from scipy.maxentropy import logsumexp
 from Isochrone import Isochrone
 from PadovaIsochrone import PadovaIsochrone
+_LOGTOLN= 1./nu.log10(nu.exp(1.))
 def eval_distpdf(ds,mdict=None,mivardict=None,logg=None,logg_ivar=None,
                  teff=None,teff_ivar=None,logage=None,logage_ivar=None,
                  Z=None,Z_ivar=None,feh=None,feh_ivar=None,
@@ -93,7 +94,7 @@ def eval_distpdf(ds,mdict=None,mivardict=None,logg=None,logg_ivar=None,
                 allout[:,zz,aa]+= -(logage-logages[aa])**2.*logage_ivar
             if not ageprior is None:
                 if isinstance(ageprior,str) and ageprior.lower() == 'flat':
-                    allout[:,zz,aa]+= logages[aa]
+                    allout[:,zz,aa]+= logages[aa]*_LOGTOLN
         #add Z constraint and prior
         if not Z is None:
             allout[:,zz,:]+= -(Z-ZS[zz])**2.*Z_ivar
