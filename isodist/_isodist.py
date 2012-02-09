@@ -102,8 +102,8 @@ def eval_distpdf(ds,mdict=None,mivardict=None,logg=None,logg_ivar=None,
     out= nu.zeros(len(_ds))
     for jj in range(len(_ds)):
         out[jj]= logsumexp(allout[jj,:,:])
-    if normalize:
-        out-= logsumexp(out)
+    if normalize and not scalarOut:
+        out-= logsumexp(out)+nu.log(ds[1]-ds[0])
     #return
     if scalarOut: return out[0]
     else: return out
