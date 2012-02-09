@@ -73,7 +73,52 @@ def exponentialChabrier2001(m,int=False):
     else:
         return 3.*m**-_ALPHAEXPONENTIALCHABRIER2001*numpy.exp(-(_MOEXPONENTIALCHABRIER2001/m)**_BETAEXPONENTIALCHABRIER2001)
 
+def kroupa2003(m,int=False):
+    """
+    NAME:
+       kroupa2003
+    PURPOSE:
+       ''universal'' IMF from Kroupa (2003), MNRAS 322, 231
+    INPUT:
+       m - mass in solar masses
+       int= (default: False) if True, return integrated N(<m)
+    OUTPUT:
+       dN/dm
+    HISTORY:
+       2012-02-08 - Written - Bovy (IAS)
+    """
+    if int:
+        if isinstance(m,(long,float)):
+            m= [m]
+            scalarOut= True
+        else:
+            scalarOut= False
+        out= numpy.zeros(len(m))
+        for ii in range(len(m)):
+            out[ii]= integrate.quad(_intKroupa2003Integrand,
+                                    0.,
+                                    m[ii])[0]
+        if isinstance(m,list): return list(out)
+        elif scalarOut: return out[0]
+        else: return out
+    else:
+        if isinstance(m,(long,float)):
+            if m < 0.08: return (m/0.08)**-0.3
+            elif m < 0.5: return (m/0.08)**-1.3
+            else: return (m/0.5)**-2.3*(0.5/0.08)**-1.3
+        elif isinstance(m,list):
+            m= numpy.array(m)
+            return kroupa2003(m)
+        elif isinstance(m,numpy.ndarray):
+            out= numpy.zeros(len(m))
+            out[(m < 0.08)]= (m[(m < 0.08)]/0.08)**-0.3
+            out[(m >= 0.08)*(m < 0.5)]= (m[(m >= 0.08)*(m < 0.5)]/0.08)**-1.3
+            out[(m >= 0.5)]= (m[(m >= 0.5)]/0.5)**-2.3*(0.5/0.08)**-1.3
+            return out
+
 def _intLognormalChabrier2001Integrand(m):
     return lognormalChabrier2001(m,int=False)
 def _intExponentialChabrier2001Integrand(m):
     return exponentialChabrier2001(m,int=False)
+def _intKroupa2003Integrand(m):
+    return kroupa2003(m,int=False)
