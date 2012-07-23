@@ -116,8 +116,6 @@ class BastiIsochrone (Isochrone):
         ii= 0
         while (not indx[ii]): ii+= 1
         thisDict= self._dicts[ii]
-        #round logage
-        logage= round(100.*logage)/100.
         if maxm is None:
             indx= (thisDict['logage'] == logage)
         else:
