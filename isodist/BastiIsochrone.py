@@ -71,6 +71,47 @@ class BastiIsochrone (Isochrone):
         self._logages= numpy.array(sorted(list(set(self._dicts[0]['logage']))))
         return None
         
+    def __call__(self,logage,Z=None,feh=None,afe=None,maxm=None,
+                 asrecarray=False):
+        """
+        NAME:
+           __call__
+        PURPOSE:
+           get a single isochrone from the library
+        INPUT:
+           logage - log_10 age
+           Z= or feh= metallicity (use Z_\odot=0.019)
+           afe= None (not yet supported for Basti)
+           maxm= maximum mass to consider (m_ini)
+        KEYWORDS:
+           asrecarray= if True, return recarray
+        OUTPUT:
+           isochrone
+        HISTORY:
+           2012-07-23 - Written - Bovy (IAS)
+        """
+        if not afe is None:
+            raise NotImplementedError("'afe=' not yet implemented for Basti isochrones")
+        if not feh is None:
+            Z= FEH2Z(feh)
+        indx= (self._ZS == Z)
+        ii= 0
+        while (not indx[ii]): ii+= 1
+        thisDict= self._dicts[ii]
+        #round logage
+        logage= round(100.*logage)/100.
+        if maxm is None:
+            indx= (thisDict['logage'] == logage)
+        else:
+            indx= (thisDict['logage'] == logage)*(thisDict['M_ini'] < maxm)
+        outDict= {}
+        for key in thisDict.keys():
+            outDict[key]= thisDict[key][indx]
+        if asrecarray:
+            return dict2recarray(outDict)
+        else:
+            return outDict
+
 def _get_ages(path):
     """Return the available ages for this isochrone set"""
     files= glob.glob(path)
