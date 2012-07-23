@@ -6,13 +6,32 @@ import numpy
 from Isochrone import Isochrone, FEH2Z, Z2FEH, dict2recarray
 from PadovaIsochrone import _DATADIR
 _BASTIZSOLAR= 0.0198
-_ZS= [0.0001,0.0003]
+_ZS= [0.0001,0.0003,0.0006,0.001,0.002,0.004,0.008,0.01,0.0198,
+      0.03,0.04]
 _ZDICT= {}
 _YDICT= {}
 _ZDICT['0.0001']= '104'
 _YDICT['0.0001']= '245'
 _ZDICT['0.0003']= '304'
 _YDICT['0.0003']= '245'
+_ZDICT['0.0006']= '604'
+_YDICT['0.0006']= '246'
+_ZDICT['0.0010']= '103'
+_YDICT['0.0010']= '246'
+_ZDICT['0.0020']= '203'
+_YDICT['0.0020']= '248'
+_ZDICT['0.0040']= '403'
+_YDICT['0.0040']= '251'
+_ZDICT['0.0080']= '803'
+_YDICT['0.0080']= '256'
+_ZDICT['0.0100']= '102'
+_YDICT['0.0100']= '259'
+_ZDICT['0.0198']= 'zsun'
+_YDICT['0.0198']= 'ysun'
+_ZDICT['0.0300']= '302'
+_YDICT['0.0300']= '288'
+_ZDICT['0.0400']= '402'
+_YDICT['0.0400']= '303'
 class BastiIsochrone (Isochrone):
     """Class that represents a Basti isochrone"""
     def __init__(self,Z=None,filters=None,eta=0.4):
@@ -42,7 +61,6 @@ class BastiIsochrone (Isochrone):
                 ZS= Z
             else:
                 ZS= [Z]
-        print ZS
         for Zm in ZS:
             if 'K' in self._filters:
                 subdir= 'basti-scaled-canonical-%.1f-UBVRIJHKL' % eta
