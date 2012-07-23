@@ -46,17 +46,21 @@ class BastiIsochrone (Isochrone):
         for Zm in ZS:
             if 'K' in self._filters:
                 subdir= 'basti-scaled-canonical-%.1f-UBVRIJHKL' % eta
+            if eta == 0.2:
+                etastr= 'ss2.'
+            elif eta == 0.4:
+                etastr= 's.'
             ages, rawages= _get_ages(os.path.join(_DATADIR,
                                                   subdir,
                                                   'wz'+_ZDICT['%.4f' % Zm]
                                                   +'y'+_YDICT['%.4f' % Zm]
-                                                  +'ss2.'+'*'
+                                                  +etastr+'*'
                                                   +'_c03hbs'))
             dicts.append(read_basti_isochrone(os.path.join(_DATADIR,
                                                            subdir),
                                               'wz'+_ZDICT['%.4f' % Zm]
                                               +'y'+_YDICT['%.4f' % Zm]
-                                              +'ss2.',
+                                              +etastr,
                                               '_c03hbs',
                                               ages=ages,
                                               rawages=rawages,
