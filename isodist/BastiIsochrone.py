@@ -15,7 +15,7 @@ _ZDICT['0.0003']= '304'
 _YDICT['0.0003']= '245'
 class BastiIsochrone (Isochrone):
     """Class that represents a Basti isochrone"""
-    def __init__(self,Z=None,filters=None):
+    def __init__(self,Z=None,filters=None,eta=0.4):
         """
         NAME:
            __init__
@@ -24,12 +24,13 @@ class BastiIsochrone (Isochrone):
         INPUT:
            Z= load only this metallicity (can be list)
            filters= list of filters to load (e.g., ['U','B','V','R','I','J','K','L'])
+           eta= (0.4) mass-loss parameter
         OUTPUT:
         HISTORY:
            2012-07-23 - Written - Bovy (IAS)
         """
         if filters is None:
-            self._filters= ['U','B','V','R','I','J','K','L']
+            self._filters= ['U','B','V','R','I','J','H','K','L']
         else:
             self._filters= filters
         #Read the files
@@ -44,7 +45,7 @@ class BastiIsochrone (Isochrone):
         print ZS
         for Zm in ZS:
             if 'K' in self._filters:
-                subdir= 'basti-scaled-canonical-0.2-UBVRIJKL'
+                subdir= 'basti-scaled-canonical-%.1f-UBVRIJHKL' % eta
             ages, rawages= _get_ages(os.path.join(_DATADIR,
                                                   subdir,
                                                   'wz'+_ZDICT['%.4f' % Zm]
@@ -124,6 +125,17 @@ def read_basti_isochrone(dir,name1,name2,ages=None,rawages=None,
             M_act.append(float(row[1]))
             logL.append(float(row[2]))
             logTe.append(float(row[3]))
+            if 'K' in filters:
+                V= float(row[4])
+                B= float(row[6])+V
+                U= float(row[5])+B
+                I= V-float(row[7])
+                R= V-float(row[8])
+                J= V-float(row[9])
+                K= V-float(row[10])
+                L= V-float(row[11])
+                H= float(row[12])+K
+            mags.append([U,B,V,R,I,J,H,K,L])
     #Load everything into a dictionary
     outDict= {}
     outDict['logage']= numpy.array(logage)
@@ -131,16 +143,9 @@ def read_basti_isochrone(dir,name1,name2,ages=None,rawages=None,
     outDict['M_act']= numpy.array(M_act)
     outDict['logL']= numpy.array(logL)
     outDict['logTe']= numpy.array(logTe)
-    """
     for ii in range(nfilters):
         thismag= []
         for jj in range(len(mags)):
             thismag.append(mags[jj][ii])
-        outDict[filters[ii]]= nu.array(thismag)
-    """
+        outDict[filters[ii]]= numpy.array(thismag)
     return outDict
-
-        
-    
-
-    return None
