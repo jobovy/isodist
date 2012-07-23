@@ -29,7 +29,7 @@ class AnIsochrone (Isochrone):
         if Z is None: #Z here is actually FeH, we correct this later
             ZS= _ZS
         else:
-            if isinstance(Z,list):
+            if isinstance(Z,(list,numpy.ndarray)):
                 ZS= Z
             else:
                 ZS= [Z]
