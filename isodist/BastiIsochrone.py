@@ -83,7 +83,7 @@ class BastiIsochrone (Isochrone):
                                               ages=ages,
                                               rawages=rawages,
                                               filters=self._filters))
-        self._ZS= ZS
+        self._ZS= numpy.array(ZS)
         self._dicts= dicts
         #Gather ages
         self._logages= numpy.array(sorted(list(set(self._dicts[0]['logage']))))
