@@ -36,3 +36,9 @@ Thumbs.db
 
 #
 *~
+
+#Build#
+#######
+build/
+dist/
+isodist.egg-info/
