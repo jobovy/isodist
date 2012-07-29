@@ -46,7 +46,7 @@ if _DATADIR is None:
                            '../data')
 class DartmouthIsochrone (Isochrone):
     """Class that represents a Dartmouth isochrone"""
-    def __init__(self,feh=None,filters=None,afe=0.):
+    def __init__(self,feh=None,filters=None,afe=0.,onlyold=False):
         """
         NAME:
            __init__
@@ -56,6 +56,7 @@ class DartmouthIsochrone (Isochrone):
            Z= load only this metallicity (can be list)
            filters= list of filters (optional)
            afe= [a/Fe] (default: 0.)
+           onlyold= if True, only load age >= 1 Gyr
         OUTPUT:
         HISTORY:
            2012-07-29 - Written - Bovy (IAS)
@@ -84,7 +85,7 @@ class DartmouthIsochrone (Isochrone):
                                                                'feh'+fehsignstr+'%02i' % (int(numpy.fabs(10.*fehm)))\
                                                                    +'afe'+afesignstr+'%01i' % (int(numpy.fabs(10.*afe)))\
                                                                    +'.'+post["".join(self._filters)]),
-                                                               filters=self._filters))
+                                                               filters=self._filters,onlyold=onlyold))
         self._ZS= FEH2Z(numpy.array(FEHS))
         self._dicts= dicts
         #Gather ages
@@ -130,7 +131,7 @@ class DartmouthIsochrone (Isochrone):
         else:
             return outDict
 
-def read_dartmouth_isochrone(name,filters=None,skiponegyr=False):
+def read_dartmouth_isochrone(name,filters=None,onlyold=False):
     """
     NAME:
        read_dartmouth_isochrone
@@ -139,7 +140,7 @@ def read_dartmouth_isochrone(name,filters=None,skiponegyr=False):
     INPUT:
        name- name of the file
        filters= list of filters in the file
-       skiponegyr= if True, skip the 1 Gyr isochrone (since it's both in the young and old isochrones)
+       onlyold= if True, only load age>= 1 Gyr
     OUTPUT:
        dictionary with the table
     HISTORY:
@@ -147,7 +148,10 @@ def read_dartmouth_isochrone(name,filters=None,skiponegyr=False):
     """
     dialect= csv.excel
     dialect.skipinitialspace=True
-    files= [open(name,'r'),open(name+'_2','r')]
+    if onlyold:
+        files= [open(name,'r')]
+    else:
+        files= [open(name,'r'),open(name+'_2','r')]
     nfilters= len(filters)
     ncols= nfilters+5
     logage=[]
@@ -174,7 +178,7 @@ def read_dartmouth_isochrone(name,filters=None,skiponegyr=False):
                 if len(row) == 0: continue
                 pass
             if second and currentage == 1.: continue
-            logage.append(6.+numpy.log10(currentage))
+            logage.append(9.+numpy.log10(currentage))
             EEP.append(float(row[0]))
             M.append(float(row[1]))
             logTe.append(float(row[2]))
