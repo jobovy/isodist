@@ -32,6 +32,10 @@ _ZDICT['0.0300']= '302'
 _YDICT['0.0300']= '288'
 _ZDICT['0.0400']= '402'
 _YDICT['0.0400']= '303'
+#Dictionary for last part of filename
+post= {}
+post['UBVRIJHKL']= 'c03hbs'
+post['ugriz']= 'sloan'
 class BastiIsochrone (Isochrone):
     """Class that represents a Basti isochrone"""
     def __init__(self,Z=None,filters=None,eta=0.4):
@@ -62,8 +66,7 @@ class BastiIsochrone (Isochrone):
             else:
                 ZS= [Z]
         for Zm in ZS:
-            if 'K' in self._filters:
-                subdir= 'basti-scaled-canonical-%.1f-UBVRIJHKL' % eta
+            subdir= 'basti-scaled-canonical-%.1f-' % eta + ''.join(self._filters)
             if eta == 0.2:
                 etastr= 'ss2.'
             elif eta == 0.4:
@@ -73,13 +76,13 @@ class BastiIsochrone (Isochrone):
                                                   'wz'+_ZDICT['%.4f' % Zm]
                                                   +'y'+_YDICT['%.4f' % Zm]
                                                   +etastr+'*'
-                                                  +'_c03hbs'))
+                                                  +'_'+post[''.join(self._filters)]))
             dicts.append(read_basti_isochrone(os.path.join(_DATADIR,
                                                            subdir),
                                               'wz'+_ZDICT['%.4f' % Zm]
                                               +'y'+_YDICT['%.4f' % Zm]
                                               +etastr,
-                                              '_c03hbs',
+                                              '_'+post[''.join(self._filters)],
                                               ages=ages,
                                               rawages=rawages,
                                               filters=self._filters))
@@ -186,7 +189,7 @@ def read_basti_isochrone(dir,name1,name2,ages=None,rawages=None,
             M_act.append(float(row[1]))
             logL.append(float(row[2]))
             logTe.append(float(row[3]))
-            if 'K' in filters:
+            if ''.join(filters) == 'UBVRIJHKL':
                 V= float(row[4])
                 B= float(row[6])+V
                 U= float(row[5])+B
@@ -196,7 +199,14 @@ def read_basti_isochrone(dir,name1,name2,ages=None,rawages=None,
                 K= V-float(row[10])
                 L= V-float(row[11])
                 H= float(row[12])+K
-            mags.append([U,B,V,R,I,J,H,K,L])
+                mags.append([U,B,V,R,I,J,H,K,L])
+            elif ''.join(filters) == 'ugriz':
+                g= float(row[4])
+                u= float(row[5])+g
+                r= g-float(row[6])
+                i= r-float(row[7])
+                z= i-float(row[8])
+                mags.append([u,g,r,i,z])
     #Load everything into a dictionary
     outDict= {}
     outDict['logage']= numpy.array(logage)
