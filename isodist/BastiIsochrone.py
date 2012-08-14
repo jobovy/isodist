@@ -36,6 +36,8 @@ _YDICT['0.0400']= '303'
 post= {}
 post['UBVRIJHKL']= 'c03hbs'
 post['ugriz']= 'sloan'
+post['uu_0bym1c1c1_0H_betaCa']= 'strm'
+strmfilters= ['u','u_0','b','y','m1','c1','c1_0','H_beta','Ca']
 class BastiIsochrone (Isochrone):
     """Class that represents a Basti isochrone"""
     def __init__(self,Z=None,filters=None,eta=0.4):
@@ -67,6 +69,8 @@ class BastiIsochrone (Isochrone):
                 ZS= [Z]
         for Zm in ZS:
             subdir= 'basti-scaled-canonical-%.1f-' % eta + ''.join(self._filters)
+            if ''.join(self._filters) == 'uu_0bym1c1c1_0H_betaCa':
+                subdir= 'basti-scaled-canonical-%.1f-strm' % eta
             if eta == 0.2:
                 etastr= 'ss2.'
             elif eta == 0.4:
@@ -207,6 +211,17 @@ def read_basti_isochrone(dir,name1,name2,ages=None,rawages=None,
                 i= r-float(row[7])
                 z= i-float(row[8])
                 mags.append([u,g,r,i,z])
+            elif ''.join(filters) == 'uu_0bym1c1c1_0H_betaCa':
+                y= float(row[4])
+                b= y+float(row[7])
+                u= b+float(row[5])
+                u_0= b+float(row[6])
+                m1= float(row[8])
+                c1= float(row[9])
+                c1_0= float(row[10])
+                H_beta= float(row[11])
+                Ca= float(row[12])
+                mags.append([u,u_0,b,y,m1,c1,c1_0,H_beta,Ca])
     #Load everything into a dictionary
     outDict= {}
     outDict['logage']= numpy.array(logage)
