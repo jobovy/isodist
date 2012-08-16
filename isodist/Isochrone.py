@@ -6,6 +6,8 @@ try:
 except ImportError:
     import bovy_plot #BOVY: COPY IN LOCAL VERSION
 _ZSOLAR= 0.019
+_LOGTESUN= numpy.log10(5777)
+_LOGGSUN= numpy.log10(27400.)
 class Isochrone:
     """Template for any Isochrone type class"""
     def __init__(self):
@@ -208,9 +210,29 @@ class Isochrone:
         return bovy_plot.bovy_plot(x,y,*args,**kwargs)
 
 def Z2FEH(z,zsolar=_ZSOLAR):
+    """Convert Z to FeH assuming zsolar"""
     return numpy.log(z)-math.log(zsolar)
 def FEH2Z(feh,zsolar=_ZSOLAR):
+    """Convert FeH to Z assuming zsolar"""
     return numpy.exp(feh+math.log(zsolar))
+
+def logg(logL,logTe,mass):
+    """
+    NAME:
+       logg
+    PURPOSE:
+       calculate log g from luminosity, teff, and mass
+    INPUT:
+       logL - log Luminosity (solar units)
+       logTe- log effective temperature (log K)
+       mass - mass (solar units)
+    OUTPUT:
+       log g (log cm/s^2)
+    HISTORY:
+       2012-08-16 - Written - Bovy (IAS)
+    """
+    logR= -2.*(logTe-_LOGTESUN)+0.5*logL
+    return numpy.log10(mass)-2.*logR+_LOGGSUN
 
 def dict2recarray(dict):
     nEntries= len(dict.keys())
