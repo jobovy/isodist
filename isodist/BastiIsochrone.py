@@ -3,7 +3,7 @@ import glob
 import csv
 import math
 import numpy
-from Isochrone import Isochrone, FEH2Z, Z2FEH, dict2recarray
+from Isochrone import Isochrone, FEH2Z, Z2FEH, dict2recarray, logg
 from PadovaIsochrone import _DATADIR
 _BASTIZSOLAR= 0.0198
 _ZS= [0.0001,0.0003,0.0006,0.001,0.002,0.004,0.008,0.01,0.0198,
@@ -229,6 +229,7 @@ def read_basti_isochrone(dir,name1,name2,ages=None,rawages=None,
     outDict['M_act']= numpy.array(M_act)
     outDict['logL']= numpy.array(logL)
     outDict['logTe']= numpy.array(logTe)
+    outDict['logg']= logg(outDict['logL'],outDict['logTe'],outDict['M_act'])
     for ii in range(nfilters):
         thismag= []
         for jj in range(len(mags)):
