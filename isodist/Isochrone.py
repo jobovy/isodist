@@ -23,7 +23,8 @@ class Isochrone:
         """
         raise NotImplementedError("'__init__' not implemented for this isochrone")
 
-    def __call__(self,logage,Z=None,feh=None,afe=None,maxm=None):
+    def __call__(self,logage,Z=None,feh=None,afe=None,maxm=None,
+                 stage=None):
         """
         NAME:
            __call__
@@ -34,6 +35,8 @@ class Isochrone:
            Z= or feh= metallicity (use Z_\odot=0.019)
            afe= None (not supported for Padova)
            maxm= maximum mass to consider (m_ini)
+           stage= if set, only return this evolutionary stage 
+                  (if this exists for this isochrone libary)
         OUTPUT:
            isochrone
         HISTORY:
@@ -94,6 +97,8 @@ class Isochrone:
            d1= x dimension (for color write 'J-Ks')
            d2= y dimension
            maxm= maximum mass to plot
+           stage= if set, only return this evolutionary stage 
+                  (if this exists for this isochrone libary)
            ignore_gaps= if True, ignore non-existant isochrones
            +bovy_plot.bovy_plot keywords
         OUTPUT:
@@ -163,6 +168,10 @@ class Isochrone:
             maxm= kwargs['maxm']
             kwargs.pop('maxm')
         else: maxm= None
+        if kwargs.has_key('stage'):
+            stage= kwargs['stage']
+            kwargs.pop('stage')
+        else: stage= None
         if kwargs.has_key('d1'):
             d1= kwargs['d1']
             kwargs.pop('d1')
@@ -178,7 +187,7 @@ class Isochrone:
             ignore_gaps= False
         #get isochrone
         try:
-            iso= self(logage,Z=Z,feh=feh,afe=afe,maxm=maxm)
+            iso= self(logage,Z=Z,feh=feh,afe=afe,maxm=maxm,stage=stage)
         except IOError:
             if ignore_gaps: return None
             else: 
