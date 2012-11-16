@@ -50,7 +50,7 @@ class AnIsochrone (Isochrone):
         return None
         
     def __call__(self,logage,Z=None,feh=None,afe=None,maxm=None,
-                 asrecarray=False):
+                 asrecarray=False,stage=None):
         """
         NAME:
            __call__
@@ -62,6 +62,7 @@ class AnIsochrone (Isochrone):
            afe= None (not supported for An; linear relation between afe and 
                 feh is assumed)
            maxm= maximum mass to consider (m_ini)
+           stage= if set, only show this evolutionary stage (NOT IMPLEMENTED FOR AN)
         KEYWORDS:
            asrecarray= if True, return recarray, otherwise dict
         OUTPUT:
