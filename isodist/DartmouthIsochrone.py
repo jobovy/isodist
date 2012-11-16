@@ -93,7 +93,7 @@ class DartmouthIsochrone (Isochrone):
         return None
 
     def __call__(self,logage,Z=None,feh=None,afe=None,maxm=None,
-                 asrecarray=False):
+                 asrecarray=False,stage=None):
         """
         NAME:
            __call__
@@ -104,6 +104,7 @@ class DartmouthIsochrone (Isochrone):
            Z= or feh= metallicity (use Z_\odot=0.019)
            afe= None (not supported for Padova)
            maxm= maximum mass to consider (m_ini)
+           stage= if set, only show this evolutionary stage (NOT IMPLEMENTED FOR DARTMOUTH)
         KEYWORDS:
            asrecarray= if True, return recarray
         OUTPUT:
