@@ -44,7 +44,8 @@ if _DATADIR is None:
                            '../data')
 class PadovaIsochrone (Isochrone):
     """Class that represents a Padova isochrone"""
-    def __init__(self,type='2mass-spitzer-wise',Z=None,filters=None):
+    def __init__(self,type='2mass-spitzer-wise',Z=None,filters=None,
+                 parsec=False):
         """
         NAME:
            __init__
@@ -54,6 +55,7 @@ class PadovaIsochrone (Isochrone):
            type= type of isochrones to load (e.g., 2mass-spitzer-wise)
            Z= load only this metallicity (can be list)
            filters= list of filters (optional)
+           parsec= if True, use new PARSEC isochrones
         OUTPUT:
         HISTORY:
            2011-04-27 - Written - Bovy (NYU)
@@ -72,17 +74,23 @@ class PadovaIsochrone (Isochrone):
                 ZS= Z
             else:
                 ZS= [Z]
+        if parsec:
+            basename= 'parsec-'+type.lower()
+        else:
+            basename= type.lower()
         for Zm in ZS:
             try:
                 dicts.append(read_padova_isochrone(os.path.join(_DATADIR,
-                                                                type.lower(),
-                                                                type.lower()+'-Z-%5.3f.dat.gz' % Zm),
-                                                   filters=filters))
+                                                                basename,
+                                                                basename+'-Z-%5.3f.dat.gz' % Zm),
+                                                   filters=filters,
+                                                   parsec=parsec))
             except IOError: #4?
                 dicts.append(read_padova_isochrone(os.path.join(_DATADIR,
-                                                                type.lower(),
-                                                                type.lower()+'-Z-%5.4f.dat.gz' % Zm),
-                                                   filters=filters))
+                                                                basename,
+                                                                basename+'-Z-%5.4f.dat.gz' % Zm),
+                                                   filters=filters,
+                                                   parsec=parsec))
                 
         self._ZS= nu.array(ZS)
         self._dicts= dicts
@@ -92,7 +100,8 @@ class PadovaIsochrone (Isochrone):
         return None
 
     def __call__(self,logage,Z=None,feh=None,afe=None,maxm=None,
-                 asrecarray=False):
+                 asrecarray=False,
+                 stage=None):
         """
         NAME:
            __call__
@@ -103,6 +112,7 @@ class PadovaIsochrone (Isochrone):
            Z= or feh= metallicity (use Z_\odot=0.019)
            afe= None (not supported for Padova)
            maxm= maximum mass to consider (m_ini)
+           stage= if set, only show this evolutionary stage
         KEYWORDS:
            asrecarray= if True, return recarray
         OUTPUT:
@@ -124,6 +134,8 @@ class PadovaIsochrone (Isochrone):
             indx= (thisDict['logage'] == logage)
         else:
             indx= (thisDict['logage'] == logage)*(thisDict['M_ini'] < maxm)
+        if not stage is None:
+            indx *= (thisDict['stage'] == stage)
         outDict= {}
         for key in thisDict.keys():
             outDict[key]= thisDict[key][indx]
@@ -132,7 +144,7 @@ class PadovaIsochrone (Isochrone):
         else:
             return outDict
 
-def read_padova_isochrone(name,filters=None):
+def read_padova_isochrone(name,filters=None,parsec=False):
     """
     NAME:
        read_padova_isochrone
@@ -141,6 +153,7 @@ def read_padova_isochrone(name,filters=None):
     INPUT:
        name- name of the file
        filters= list of filters in the file
+       parsec= if True, use new parsec isochrones, which have stage
     OUTPUT:
        dictionary with the table
     EXAMPLE:
@@ -165,36 +178,41 @@ def read_padova_isochrone(name,filters=None):
     logTe= []
     logg= []
     mbol= []
-    CO= []
-    M_hec= []
-    period= []
-    pmode= []
-    logMdot= []
+    if not parsec:
+        CO= []
+        M_hec= []
+        period= []
+        pmode= []
+        logMdot= []
     int_IMF= []
     mags= []
+    if parsec: stage= []
     for row in reader:
         try:
             if row[0][0] == '#':
                 continue
         except IndexError:
             pass
-        logage.append(float(row[1]))
-        M_ini.append(float(row[2]))
-        M_act.append(float(row[3]))
-        logL.append(float(row[4]))
-        logTe.append(float(row[5]))
-        logg.append(float(row[6]))
-        mbol.append(float(row[7]))
+        logage.append(float(row[1+parsec])) #parsec has Z as a column
+        M_ini.append(float(row[2+parsec]))
+        M_act.append(float(row[3+parsec]))
+        logL.append(float(row[4+parsec]))
+        logTe.append(float(row[5+parsec]))
+        logg.append(float(row[6+parsec]))
+        mbol.append(float(row[7+parsec]))
         thismags= []
         for ii in range(nfilters):
-            thismags.append(float(row[8+ii]))
+            thismags.append(float(row[8+parsec+ii]))
         mags.append(thismags)
-        CO.append(float(row[8+nfilters]))
-        M_hec.append(float(row[9+nfilters]))
-        period.append(float(row[10+nfilters]))
-        pmode.append(float(row[11+nfilters]))
-        logMdot.append(float(row[12+nfilters]))
-        int_IMF.append(float(row[13+nfilters]))
+        if not parsec:
+            CO.append(float(row[8+nfilters]))
+            M_hec.append(float(row[9+nfilters]))
+            period.append(float(row[10+nfilters]))
+            pmode.append(float(row[11+nfilters]))
+            logMdot.append(float(row[12+nfilters]))
+        int_IMF.append(float(row[13-4*parsec+nfilters])) #4 bc of extra Z
+        if parsec:
+            stage.append(float(row[14-4*parsec+nfilters]))
     #Load everything into a dictionary
     outDict= {}
     outDict['logage']= nu.array(logage)
@@ -204,12 +222,15 @@ def read_padova_isochrone(name,filters=None):
     outDict['logTe']= nu.array(logTe)
     outDict['logg']= nu.array(logg)
     outDict['mbol']= nu.array(mbol)
-    outDict['CO']= nu.array(CO)
-    outDict['M_hec']= nu.array(M_hec)
-    outDict['period']= nu.array(period)
-    outDict['pmode']= nu.array(pmode)
-    outDict['logMdot']= nu.array(logMdot)
+    if not parsec:
+        outDict['CO']= nu.array(CO)
+        outDict['M_hec']= nu.array(M_hec)
+        outDict['period']= nu.array(period)
+        outDict['pmode']= nu.array(pmode)
+        outDict['logMdot']= nu.array(logMdot)
     outDict['int_IMF']= nu.array(int_IMF)
+    if parsec:
+        outDict['stage']= nu.array(stage)
     for ii in range(nfilters):
         thismag= []
         for jj in range(len(mags)):
