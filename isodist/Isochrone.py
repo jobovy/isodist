@@ -220,10 +220,10 @@ class Isochrone:
 
 def Z2FEH(z,zsolar=_ZSOLAR):
     """Convert Z to FeH assuming zsolar"""
-    return numpy.log(z)-math.log(zsolar)
+    return numpy.log10(z)-math.log10(zsolar)
 def FEH2Z(feh,zsolar=_ZSOLAR):
     """Convert FeH to Z assuming zsolar"""
-    return numpy.exp(feh+math.log(zsolar))
+    return 10.**(feh+math.log10(zsolar))
 
 def logg(logL,logTe,mass):
     """
