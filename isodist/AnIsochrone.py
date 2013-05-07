@@ -73,7 +73,7 @@ class AnIsochrone (Isochrone):
         if not afe is None:
             raise NotImplementedError("'afe=' not implemented for Padova isochrones")
         if not feh is None:
-            Z= math.exp(feh+math.log(_ANZSOLAR))
+            Z= 10.**(feh+math.log10(_ANZSOLAR))
         indx= (self._ZS == Z)
         ii= 0
         while (ii < len(self._dicts) and not indx[ii]): ii+= 1
