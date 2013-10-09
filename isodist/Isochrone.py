@@ -218,9 +218,14 @@ class Isochrone:
         #plot
         return bovy_plot.bovy_plot(x,y,*args,**kwargs)
 
-def Z2FEH(z,zsolar=_ZSOLAR):
+def Z2FEH(z,zsolar=None,parsec=False):
     """Convert Z to FeH assuming zsolar"""
-    return numpy.log10(z)-math.log10(zsolar)
+    if parsec:
+        if zsolar is None: zsolar= 0.0152
+        return numpy.log10(z/(1.-0.2485-2.78*z))-math.log10(zsolar/(1.-0.2485-2.78*zsolar))
+    else:
+        if zsolar is None: zsolar= _ZSOLAR
+        return numpy.log10(z)-math.log10(zsolar)
 def FEH2Z(feh,zsolar=_ZSOLAR):
     """Convert FeH to Z assuming zsolar"""
     return 10.**(feh+math.log10(zsolar))
