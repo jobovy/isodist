@@ -74,6 +74,7 @@ class PadovaIsochrone (Isochrone):
                 ZS= Z
             else:
                 ZS= [Z]
+        self.parsec= parsec
         if parsec:
             basename= 'parsec-'+type.lower()
         else:
@@ -123,7 +124,7 @@ class PadovaIsochrone (Isochrone):
         if not afe is None:
             raise NotImplementedError("'afe=' not implemented for Padova isochrones")
         if not feh is None:
-            Z= FEH2Z(feh)
+            Z= FEH2Z(feh,parsec=self.parsec)
         indx= (self._ZS == Z)
         ii= 0
         while (not indx[ii]): ii+= 1
