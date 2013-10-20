@@ -65,6 +65,8 @@ class PadovaIsochrone (Isochrone):
             filters= ['J','H','Ks','[3.6]','[4.5]','[5.8]','[8.0]','[24]','[70]','[160]','W1','W2','W3','W4']
         elif type.lower() == 'sdss-ukidss':
             filters= ['u','g','r','i','z','Z','Y','J','H','K']
+        elif type.lower() == 'sdss-2mass':
+            filters= ['u','g','r','i','z','J','H','Ks']
         #Read the files
         dicts= []
         if Z is None:
