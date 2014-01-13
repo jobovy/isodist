@@ -2,6 +2,7 @@ import os, os.path
 import csv
 import math
 import numpy
+import gzip
 from Isochrone import Isochrone, FEH2Z, Z2FEH, dict2recarray
 from PadovaIsochrone import _DATADIR
 _ANZSOLAR= 0.0176
@@ -116,7 +117,6 @@ def read_an_isochrone(name,filters=None):
         file= open(name,'r')
     reader= csv.reader(file,delimiter=' ',
                        dialect=dialect)
-    ncols= 10
     logage=[]
     Mass= []
     logL= []
