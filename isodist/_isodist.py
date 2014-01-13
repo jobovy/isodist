@@ -1,5 +1,9 @@
 import numpy as nu
-from scipy.maxentropy import logsumexp
+import scipy
+if int(scipy.__version__.split('.')[1]) < 10:
+    from scipy.maxentropy import logsumexp
+else:
+    from scipy.misc import logsumexp
 from Isochrone import Isochrone
 from PadovaIsochrone import PadovaIsochrone
 _LOGTOLN= 1./nu.log10(nu.exp(1.))
