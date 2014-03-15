@@ -45,7 +45,7 @@ if _DATADIR is None:
 class PadovaIsochrone (Isochrone):
     """Class that represents a Padova isochrone"""
     def __init__(self,type='2mass-spitzer-wise',Z=None,filters=None,
-                 parsec=False):
+                 parsec=False,eta=None):
         """
         NAME:
            __init__
@@ -56,6 +56,8 @@ class PadovaIsochrone (Isochrone):
            Z= load only this metallicity (can be list)
            filters= list of filters (optional)
            parsec= if True, use new PARSEC isochrones
+           eta= Reimers mass loss efficiency parameter 
+                (default: 0.4 for Padova, 0.2 for PARSEC)
         OUTPUT:
         HISTORY:
            2011-04-27 - Written - Bovy (NYU)
@@ -78,9 +80,15 @@ class PadovaIsochrone (Isochrone):
                 ZS= [Z]
         self.parsec= parsec
         if parsec:
-            basename= 'parsec-'+type.lower()
+            if eta == 0.2 or eta is None:
+                basename= 'parsec-'+type.lower()
+            else:
+                basename= 'parsec-%.1f-' % eta +type.lower()
         else:
-            basename= type.lower()
+            if eta == 0.4 or eta is None:
+                basename= type.lower()
+            else:
+                raise NotImplementedError('Non-default eta not implemented yet for Padova isochrones')
         for Zm in ZS:
             try:
                 dicts.append(read_padova_isochrone(os.path.join(_DATADIR,
