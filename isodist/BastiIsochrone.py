@@ -35,12 +35,13 @@ _YDICT['0.0400']= '303'
 #Dictionary for last part of filename
 post= {}
 post['UBVRIJHKL']= 'c03hbs'
+post['UBVRIJHKL_afe']= 'c04ae'
 post['ugriz']= 'sloan'
 post['uu_0bym1c1c1_0H_betaCa']= 'strm'
 strmfilters= ['u','u_0','b','y','m1','c1','c1_0','H_beta','Ca']
 class BastiIsochrone (Isochrone):
     """Class that represents a Basti isochrone"""
-    def __init__(self,Z=None,filters=None,eta=0.4):
+    def __init__(self,Z=None,filters=None,eta=0.4,afe=False):
         """
         NAME:
            __init__
@@ -50,6 +51,7 @@ class BastiIsochrone (Isochrone):
            Z= load only this metallicity (can be list)
            filters= list of filters to load (e.g., ['U','B','V','R','I','J','K','L'])
            eta= (0.4) mass-loss parameter
+           afe= (False) if True, use alpha-enhanced isochrones
         OUTPUT:
         HISTORY:
            2012-07-23 - Written - Bovy (IAS)
@@ -68,25 +70,35 @@ class BastiIsochrone (Isochrone):
             else:
                 ZS= [Z]
         for Zm in ZS:
-            subdir= 'basti-scaled-canonical-%.1f-' % eta + ''.join(self._filters)
             if ''.join(self._filters) == 'uu_0bym1c1c1_0H_betaCa':
                 subdir= 'basti-scaled-canonical-%.1f-strm' % eta
+            elif afe:
+                subdir= 'basti-aenhanced-canonical-%.1f-' % eta \
+                    + ''.join(self._filters)
+            else:
+                subdir= 'basti-scaled-canonical-%.1f-' % eta \
+                    + ''.join(self._filters)
             if eta == 0.2:
                 etastr= 'ss2.'
             elif eta == 0.4:
-                etastr= 's.'
+                if afe:
+                    etastr= 'aes.'
+                else:
+                    etastr= 's.'
+            postfilters= ''.join(self._filters)
+            if afe: postfilters+= '_afe'
             ages, rawages= _get_ages(os.path.join(_DATADIR,
                                                   subdir,
                                                   'wz'+_ZDICT['%.4f' % Zm]
                                                   +'y'+_YDICT['%.4f' % Zm]
                                                   +etastr+'*'
-                                                  +'_'+post[''.join(self._filters)]))
+                                                  +'_'+post[postfilters]))
             dicts.append(read_basti_isochrone(os.path.join(_DATADIR,
                                                            subdir),
                                               'wz'+_ZDICT['%.4f' % Zm]
                                               +'y'+_YDICT['%.4f' % Zm]
                                               +etastr,
-                                              '_'+post[''.join(self._filters)],
+                                              '_'+post[postfilters],
                                               ages=ages,
                                               rawages=rawages,
                                               filters=self._filters))
