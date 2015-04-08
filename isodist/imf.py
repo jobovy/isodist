@@ -152,7 +152,7 @@ def chabrier2003(m,int=False):
             else: return m**-2.3*0.158*numpy.exp(-_LOGMOLOGNORMALCHABRIER2003**2./2./_S2LOGNORMALCHABRIER2003)/_LOGLN
         elif isinstance(m,list):
             m= numpy.array(m)
-            return kroupa2003(m)
+            return chabrier2003(m)
         elif isinstance(m,numpy.ndarray):
             out= numpy.zeros(len(m))
             out[(m < 1.)]= 0.158/m[(m < 1.)]*numpy.exp(-(numpy.log10(m[(m < 1.)])-_LOGMOLOGNORMALCHABRIER2003)**2./2./_S2LOGNORMALCHABRIER2003)/_LOGLN
