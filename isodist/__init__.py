@@ -1,6 +1,6 @@
-from _isodist import *
-from Isochrone import FEH2Z, Z2FEH, logg
-from PadovaIsochrone import PadovaIsochrone, padovaTypes
-from AnIsochrone import AnIsochrone
-from BastiIsochrone import BastiIsochrone
-from DartmouthIsochrone import DartmouthIsochrone
+from isodist._isodist import *
+from isodist.Isochrone import FEH2Z, Z2FEH, logg
+from isodist.PadovaIsochrone import PadovaIsochrone, padovaTypes
+from isodist.AnIsochrone import AnIsochrone
+from isodist.BastiIsochrone import BastiIsochrone
+from isodist.DartmouthIsochrone import DartmouthIsochrone

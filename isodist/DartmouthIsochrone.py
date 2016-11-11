@@ -35,7 +35,7 @@ import csv
 import gzip
 import math
 import numpy
-from Isochrone import Isochrone, FEH2Z, Z2FEH, dict2recarray
+from isodist.Isochrone import Isochrone, FEH2Z, Z2FEH, dict2recarray
 _FEHS= [-2.5,-2.,-1.5,-1.,-0.5,0.,0.2,0.3,0.5]
 _DATADIR= os.getenv('ISODIST_DATA')
 #Dictionary for last part of filename

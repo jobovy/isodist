@@ -3,8 +3,8 @@ import glob
 import csv
 import math
 import numpy
-from Isochrone import Isochrone, FEH2Z, Z2FEH, dict2recarray, logg
-from PadovaIsochrone import _DATADIR
+from isodist.Isochrone import Isochrone, FEH2Z, Z2FEH, dict2recarray, logg
+from isodist.PadovaIsochrone import _DATADIR
 _BASTIZSOLAR= 0.0198
 _ZS= [0.0001,0.0003,0.0006,0.001,0.002,0.004,0.008,0.01,0.0198,
       0.03,0.04]

@@ -3,8 +3,8 @@ import csv
 import math
 import numpy
 import gzip
-from Isochrone import Isochrone, FEH2Z, Z2FEH, dict2recarray
-from PadovaIsochrone import _DATADIR
+from isodist.Isochrone import Isochrone, FEH2Z, Z2FEH, dict2recarray
+from isodist.PadovaIsochrone import _DATADIR
 _ANZSOLAR= 0.0176
 _ZS= [-0.1,-0.2,-0.3,-0.5,-1.,-1.5,-2.,-3.,0.,0.1,0.2,0.4]
 class AnIsochrone (Isochrone):

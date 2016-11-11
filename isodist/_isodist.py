@@ -4,8 +4,8 @@ if int(scipy.__version__.split('.')[1]) < 10:
     from scipy.maxentropy import logsumexp
 else:
     from scipy.misc import logsumexp
-from Isochrone import Isochrone
-from PadovaIsochrone import PadovaIsochrone
+from isodist.Isochrone import Isochrone
+from isodist.PadovaIsochrone import PadovaIsochrone
 _LOGTOLN= 1./nu.log10(nu.exp(1.))
 def eval_distpdf(ds,mdict=None,mivardict=None,logg=None,logg_ivar=None,
                  teff=None,teff_ivar=None,logage=None,logage_ivar=None,
