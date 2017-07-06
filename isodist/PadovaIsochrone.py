@@ -30,6 +30,7 @@
 #                                        PadovaIsochrone to include this new 
 #                                        type (optional)
 ###############################################################################
+import sys
 import os, os.path
 import csv
 import gzip
@@ -42,6 +43,8 @@ _DATADIR= os.getenv('ISODIST_DATA')
 if _DATADIR is None:
     _DATADIR= os.path.join(os.path.dirname(os.path.realpath(__file__)),
                            '../data')
+if sys.version_info[0] < 3:
+    FileNotFoundError= IOError
 class PadovaIsochrone (Isochrone):
     """Class that represents a Padova isochrone"""
     def __init__(self,type='2mass-spitzer-wise',Z=None,filters=None,
@@ -96,7 +99,7 @@ class PadovaIsochrone (Isochrone):
                                                                 basename+'-Z-%5.3f.dat.gz' % Zm),
                                                    filters=filters,
                                                    parsec=parsec))
-            except IOError: #4?
+            except FileNotFoundError: #4?
                 dicts.append(read_padova_isochrone(os.path.join(_DATADIR,
                                                                 basename,
                                                                 basename+'-Z-%5.4f.dat.gz' % Zm),
@@ -175,9 +178,9 @@ def read_padova_isochrone(name,filters=None,parsec=False):
     dialect= csv.excel
     dialect.skipinitialspace=True
     if name[-2:] == 'gz':
-        file= gzip.open(name,'r')
+        file= gzip.open(name,'rt')
     else:
-        file= open(name,'r')
+        file= open(name,'rt')
     reader= csv.reader(file,delimiter='\t',
                        dialect=dialect)
     nfilters= len(filters)
