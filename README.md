@@ -13,7 +13,7 @@ Standard python setup.py build/install
 
 ## DEPENDENCIES
 
-This package requires [NumPy](http://numpy.scipy.org/), [Scipy] (http://www.scipy.org/), and [Matplotlib] (http://matplotlib.sourceforge.net/).
+This package requires [NumPy](http://numpy.scipy.org/), [Scipy](http://www.scipy.org/), and [Matplotlib](http://matplotlib.sourceforge.net/).
 
 ## DATA DIRECTORY
 
