@@ -72,6 +72,8 @@ class PadovaIsochrone (Isochrone):
             filters= ['u','g','r','i','z','Z','Y','J','H','K']
         elif type.lower() == 'sdss-2mass':
             filters= ['u','g','r','i','z','J','H','Ks']
+        elif type.lower() == 'gaiadr2-tycho-2mass':
+            filters= ['G','G_BP','G_RP','B_T','V_T','J','H','Ks']
         #Read the files
         dicts= []
         if Z is None:
