@@ -107,27 +107,27 @@ class Isochrone:
            2011-04-27 - Written - Bovy (NYU)
         """
         if not isinstance(logage,(list,numpy.ndarray)) \
-                and not ((kwargs.has_key('Z') \
+                and not (('Z' in kwargs \
                               and isinstance(kwargs['Z'],(list,numpy.ndarray)))\
-                             or (kwargs.has_key('feh') \
+                             or ('feh' in kwargs \
                                      and isinstance(kwargs['feh'],numpy.ndarray))):
             return self._plot_single(logage,*args,**kwargs)
         #Do we have Z or FeH?
-        if not kwargs.has_key('Z') and kwargs.has_key('feh'): usefeh= True
+        if not 'Z' in kwargs and 'feh' in kwargs: usefeh= True
         else: usefeh= False
         if not isinstance(logage,(list,numpy.ndarray)) and usefeh:
             logage= numpy.array([logage for ii in range(len(kwargs['feh']))])
         elif not isinstance(logage,(list,numpy.ndarray)):
             logage= numpy.array([logage for ii in range(len(kwargs['Z']))])
         #Handle Z etc.
-        if kwargs.has_key('feh'):
+        if 'feh' in kwargs:
             if isinstance(kwargs['feh'],(list,numpy.ndarray)):
                 fehs= kwargs['feh']
             else:
                 fehs= numpy.array([kwargs['feh'] for ii in range(len(logage))])
         else:
             fehs= [None for ii in range(len(logage))]
-        if kwargs.has_key('Z'):
+        if 'Z' in kwargs:
             if isinstance(kwargs['Z'],(list,numpy.ndarray)):
                 ZS= kwargs['Z']
             else:
@@ -141,9 +141,7 @@ class Isochrone:
         if usefeh: kwargs['feh']= fehs[0]
         else: kwargs['Z']= ZS[0]
         out= self._plot_single(logage[0],*args,**kwargs)
-        if not kwargs.has_key('overplot') \
-                or (kwargs.has_key('overplot') and not kwargs['overplot']):
-            kwargs['overplot']= True
+        kwargs['overplot']= True
         for ii in range(1,len(logage)):
             kwargs['Z']= ZS[ii]
             kwargs['feh']= fehs[ii]
@@ -152,39 +150,14 @@ class Isochrone:
 
     def _plot_single(self,logage,*args,**kwargs):
         #kwargs
-        if kwargs.has_key('Z'):
-            Z= kwargs['Z']
-            kwargs.pop('Z')
-        else: Z= None
-        if kwargs.has_key('feh'):
-            feh= kwargs['feh']
-            kwargs.pop('feh')
-        else: feh= None
-        if kwargs.has_key('afe'):
-            afe= kwargs['afe']
-            kwargs.pop('afe')
-        else: afe= None
-        if kwargs.has_key('maxm'):
-            maxm= kwargs['maxm']
-            kwargs.pop('maxm')
-        else: maxm= None
-        if kwargs.has_key('stage'):
-            stage= kwargs['stage']
-            kwargs.pop('stage')
-        else: stage= None
-        if kwargs.has_key('d1'):
-            d1= kwargs['d1']
-            kwargs.pop('d1')
-        else: d1= self._filters[0]+'-'+self._filters[1]
-        if kwargs.has_key('d2'):
-            d2= kwargs['d2']
-            kwargs.pop('d2')
-        else: d2= self._filters[0]
-        if kwargs.has_key('ignore_gaps'):
-            ignore_gaps= kwargs['ignore_gaps']
-            kwargs.pop('ignore_gaps')
-        else:
-            ignore_gaps= False
+        Z= kwargs.pop('Z',None)
+        feh= kwargs.pop('feh',None)
+        afe= kwargs.pop('afe',None)
+        maxm= kwargs.pop('maxm',None)
+        stage= kwargs.pop('stage',None)
+        d1= kwargs.pop('d1',self._filters[0]+'-'+self._filters[1])
+        d2= kwargs.pop('d2',self._filters[0])
+        ignore_gaps= kwargs.pop('ignore_gaps',False)
         #get isochrone
         try:
             iso= self(logage,Z=Z,feh=feh,afe=afe,maxm=maxm,stage=stage)
@@ -204,16 +177,12 @@ class Isochrone:
         else:
             y= iso[d2]
         #Put in default labels
-        if not kwargs.has_key('overplot') \
-                or (kwargs.has_key('overplot') and not kwargs['overplot']):
-            if not kwargs.has_key('xlabel'):
-                kwargs['xlabel']= r'$'+d1+'$'
-            if not kwargs.has_key('ylabel'):
-                if d2 in self._filters:
-                    kwargs['ylabel']= r'$M_{'+d2+'}$'
-                else:
-                    kwargs['ylabel']= r'$'+d2+'$'
-            if not kwargs.has_key('yrange') and d2 in self._filters:
+        if not kwargs.get('overplot',False):
+            kwargs['xlabel']= kwargs.get('xlabel',r'$'+d1+'$')
+            kwargs['ylabel']= \
+                kwargs.get('ylabel',
+                    r'$M_{'+d2+'}$' if d2 in self._filters else r'$'+d2+'$')
+            if not 'yrange' in kwargs and d2 in self._filters:
                 kwargs['yrange']= [numpy.amax(y)+0.3,numpy.amin(y)-0.3]
         #plot
         return bovy_plot.bovy_plot(x,y,*args,**kwargs)
