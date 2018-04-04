@@ -33,6 +33,7 @@
 import sys
 import os, os.path
 import csv
+import copy
 import gzip
 import math
 import numpy as nu
@@ -161,6 +162,42 @@ class PadovaIsochrone (Isochrone):
             return dict2recarray(outDict)
         else:
             return outDict
+
+    def merge(self,iso):
+        """
+        NAME:
+           merge
+        PURPOSE:
+           merge in a PadovaIsochrone instance with a different filter set (needs to match in age and Z)
+        INPUT:
+           iso - PadovaIsochrone instance with a different filter set (but otherwise identical)
+        OUTPUT:
+           (none; just adds the filters to the current instance)
+        HISTORY:
+           2018-04-04 - Written - Bovy (UofT)
+        """
+        if not isinstance(iso,PadovaIsochrone):
+            raise RuntimeError("Input to merge needs to be an instance of PadovaIsochrone")
+        # Check Z and logage
+        try:
+            if nu.amax(nu.fabs(self._ZS-iso._ZS)) > 1e-10:
+                raise RuntimeError("Can only merge PadovaIsochrones with the same metallicities")
+        except ValueError: # Probably that len(self._ZS) != len(iso._ZS)
+            raise RuntimeError("Can only merge PadovaIsochrones with the same metallicities")
+        try:
+            if nu.amax(nu.fabs(self._logages-iso._logages)) > 1e-10:
+                raise RuntimeError("Can only merge PadovaIsochrones with the same logages")
+        except ValueError: # Probably that len(self._logages) != len(iso._logages)
+                raise RuntimeError("Can only merge PadovaIsochrones with the same logages")
+        # Now attempt to merge
+        for ii in range(len(self._dicts)):
+            if nu.amax(nu.fabs(self._dicts[ii]['M_ini']
+                               -iso._dicts[ii]['M_ini'])) > 1e-10:
+                raise RuntimeError("Can only merge PadovaIsochrones with the same M_ini grid")
+            newdict= copy.deepcopy(iso._dicts[ii])
+            newdict.update(self._dicts[ii]) # overwrites common
+            self._dicts[ii]= newdict
+        return None
 
 def read_padova_isochrone(name,filters=None,parsec=False):
     """
