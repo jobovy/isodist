@@ -1,6 +1,7 @@
 import numpy as nu
 import scipy
-if int(scipy.__version__.split('.')[1]) < 10:
+if int(scipy.__version__.split('.')[0]) < 1 \
+        and int(scipy.__version__.split('.')[1]) < 10:
     from scipy.maxentropy import logsumexp
 else:
     from scipy.misc import logsumexp
