@@ -1,10 +1,13 @@
 import numpy as nu
 import scipy
-if int(scipy.__version__.split('.')[0]) < 1 \
-        and int(scipy.__version__.split('.')[1]) < 10:
+_SCIPY_VERSION= [int(v.split('rc')[0])
+                 for v in scipy.__version__.split('.')]
+if _SCIPY_VERSION[0] < 1 and _SCIPY_VERSION[1] < 10:
     from scipy.maxentropy import logsumexp
-else:
+elif _SCIPY_VERSION[0] < 1 and _SCIPY_VERSION[1] < 19:
     from scipy.misc import logsumexp
+else:
+    from scipy.special import logsumexp
 from isodist.Isochrone import Isochrone
 from isodist.PadovaIsochrone import PadovaIsochrone
 _LOGTOLN= 1./nu.log10(nu.exp(1.))
