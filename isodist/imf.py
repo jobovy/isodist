@@ -13,6 +13,10 @@ _ALPHAEXPONENTIALCHABRIER2001= 3.3
 _BETAEXPONENTIALCHABRIER2001= 0.25
 _MOEXPONENTIALCHABRIER2001= 716.4
 _LOGLN= numpy.log(10.)
+import sys
+_PY3= sys.version > '3'
+if _PY3:
+    long= int
 def lognormalChabrier2001(m,int=False):
     """
     NAME:
